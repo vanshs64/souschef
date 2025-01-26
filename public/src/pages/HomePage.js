@@ -29,7 +29,6 @@ const HomePage = () => {
         },
         body: JSON.stringify({
           url: recipeInput.trim(),
-          desiredServings: servings,
         }),
       });
 
@@ -158,8 +157,7 @@ const HomePage = () => {
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <span className="time">{step.duration}</span>
-                    <span className="description">{step.description}</span>
+                    <span className="time">{step}</span>
                   </motion.div>
                 ))}
               </div>

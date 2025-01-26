@@ -23,7 +23,6 @@ def get_recipe_api():
     """
     data = request.get_json()
     url = data.get("url", "").strip()
-    desired_servings = data.get("desiredServings", 0)
 
     if not url:
         return jsonify({"error": "No URL provided"}), 400
@@ -32,20 +31,21 @@ def get_recipe_api():
         # Scrape raw data from the URL
         scraped_data = get_recipe(url)
 
-        print((scraped_data))
-        return  
+        return jsonify(scraped_data) 
 
     except Exception as e:
         print(f"Error processing recipe: {e}")
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/ingredients", methods=["GET"])
+@app.route("/ingredients", methods=["POST"])
 def get_ingredients():
     """
     API endpoint to get default or fallback recipe data.
     """
-    recipe_data = get_recipe()
+    data = request.get_json()
+    url = data.get("url", "").strip()
+    recipe_data = get_recipe(url)
     return jsonify(recipe_data)
 
 

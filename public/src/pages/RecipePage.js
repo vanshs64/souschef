@@ -31,7 +31,8 @@ const RecipePage = () => {
 
     return (
         <div className="recipe-page">
-            <h1>{locationRecipeData.title}</h1>
+            <h1 style={{ textAlign: 'center', fontSize: '2.5rem', margin: '20px 0' }}>{locationRecipeData.title}
+            </h1>
             <UserInput onSubmit={fetchRecipeData} />
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
