@@ -1,0 +1,184 @@
+.instructions-tree-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 20px;
+    position: relative;
+    width: 100%;
+}
+
+.instructions-tree {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    position: relative;
+    min-height: 200px;
+}
+
+.instruction-node {
+    position: relative;
+    margin-right: 50px; /* Space between main steps */
+}
+
+.instruction-content {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: background-color 0.3s, transform 0.3s;
+    min-width: 150px;
+}
+
+.instruction-content:hover {
+    background-color: #e6f7ff;
+}
+
+.instruction-content.active {
+    background-color: #007bff;
+    color: white;
+    transform: scale(1.05);
+}
+
+.step-number {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.children-instructions {
+    position: relative; /* Changed from absolute */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.children-instructions .instruction-node {
+    margin-right: 0;
+    margin-bottom: 20px;
+}
+
+.children-instructions::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    width: 2px;
+    height: 20px;
+    background-color: #007bff;
+}
+
+.instruction-node::after {
+    display: none; /* Hide connecting lines if causing issues */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .instruction-content {
+        min-width: 120px;
+        padding: 8px 16px;
+    }
+
+    .instruction-node {
+        margin-right: 30px;
+    }
+}
+
+.ingredients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tip-card {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1.5rem;
+    position: relative;
+}
+
+.some-class { /* Replace with actual class names */
+    left: 1rem;
+    background: #2563eb;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+}
+
+.timeline {
+    display: flex;
+    align-items: center;
+    min-width: max-content;
+    padding: 2rem 4rem;
+    position: relative;
+    height: 2px;
+    background: #e2e8f0;
+    z-index: 0;
+}
+
+.step-node {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.step-content:hover {
+    transform: translateY(-5px);
+    display: flex;
+    gap: 1rem;
+}
+
+.parallel-step {
+    background: #f1f5f9;
+    border: none;
+    cursor: pointer;
+}
+
+.secondary-button {
+    background: #f1f5f9;
+}
+
+.cooking-tips {
+    background: #f8fafc;
+    border-radius: 12px 12px 0 0;
+    padding: 2rem;
+}
+
+.cooking-tips.expanded {
+    transform: translateY(0);
+}
+
+.some-other-class { /* Replace with actual class names */
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 1rem 2rem;
+    margin: -2rem -2rem 1rem -2rem;
+    background: #e2e8f0;
+    border-radius: 12px 12px 0 0;
+}
+
+.expanded .tips-toggle::before {
+    transform: rotate(-45deg);
+}
+
+.instruction-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.another-class { /* Replace with actual class names */
+    position: absolute;
+    top: -12px;
+    left: 1rem;
+    background: #2563eb;
+}
