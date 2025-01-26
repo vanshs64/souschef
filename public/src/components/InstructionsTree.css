@@ -12,6 +12,8 @@
     align-items: flex-start;
     position: relative;
     min-height: 200px;
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .instruction-node {
@@ -181,4 +183,43 @@
     top: -12px;
     left: 1rem;
     background: #2563eb;
+}
+
+.instruction-item {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+.instruction-item:hover {
+    background-color: #e6f7ff;
+}
+
+.instruction-item.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.branch {
+    background-color: #f1f5f9;
+}
+
+.branch-instructions {
+    list-style-type: none;
+    padding-left: 20px;
+    margin-top: 5px;
+}
+
+.branch-instructions .instruction-item {
+    border: 1px dashed #007bff;
+    background-color: #ffffff;
+}
+
+.branch-instructions .instruction-item.active {
+    background-color: #0056b3;
+    color: white;
 }

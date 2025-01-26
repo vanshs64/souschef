@@ -13,12 +13,21 @@ const RecipeDetailsPage = () => {
     useEffect(() => {
         if (recipeDataFromLocation) {
             setRecipeData(recipeDataFromLocation);
-            setCurrentStep(1); // Initialize to first step
+            setCurrentStep(1);
+        } else {
+            // Fetch temporary recipe data from the backend
+            fetch('http://localhost:5000/api/temporary-recipe')
+                .then(response => response.json())
+                .then(data => {
+                    setRecipeData(data);
+                    setCurrentStep(1);
+                })
+                .catch(error => console.error('Error fetching temporary recipe:', error));
         }
     }, [recipeDataFromLocation]);
 
     if (!recipeData) {
-        return <div>No recipe data available</div>;
+        return <div>Loading...</div>;
     }
 
     const handleFinish = () => {
@@ -27,6 +36,7 @@ const RecipeDetailsPage = () => {
 
     return (
         <div className="recipe-details-container">
+            <h1 className="recipe-title" style={{ marginTop: '5px' }}>Let's Cook!</h1>
             <header className="instruction-counter">
                 Step {currentStep} of {getTotalSteps(recipeData.instructions)}
             </header>
@@ -60,15 +70,12 @@ const RecipeDetailsPage = () => {
                         Next Step
                     </button>
                 )}
-                <button className="secondary-button" onClick={() => navigate('/')}>
-                    Try Another Recipe
-                </button>
+                <button className="secondary-button" onClick={() => navigate('/')}>Try Another Recipe</button>
             </footer>
         </div>
     );
 };
 
-// Helper function to calculate total steps including branches
 const getTotalSteps = (instructions) => {
     let count = 0;
     const traverse = (steps) => {

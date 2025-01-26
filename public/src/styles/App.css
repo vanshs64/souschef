@@ -674,3 +674,37 @@ quantity-input input {
 .secondary-button:hover {
     background-color: #5a6268;
 }
+
+.content-width-constraint {
+  width: min(100%, 120ch);
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .App {
+    row-gap: 3rem;
+  }
+  
+  .timeline {
+    gap: 1.5rem;
+  }
+}
+
+.App-header h1:hover {
+  transform: translateY(-10px) translateZ(30px);
+}
+
+.App-header h1:hover::after {
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -46,6 +46,10 @@ const UserInput = () => {
         }
     };
 
+    const handleDirectAccess = () => {
+        navigate('/recipe');
+    };
+
     return (
         <div className="form-wrapper">
             {error && <div className="error-message">{error}</div>}
@@ -77,6 +81,13 @@ const UserInput = () => {
                     {loading ? 'Loading...' : 'Submit'}
                 </button>
             </form>
+            <button 
+                className="direct-access-button"
+                onClick={handleDirectAccess}
+                disabled={loading}
+            >
+                View Sample Recipe
+            </button>
         </div>
     );
 };

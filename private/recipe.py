@@ -2,53 +2,52 @@ from urllib.request import urlopen
 from urllib.error import HTTPError
 from recipe_scrapers import scrape_html
 
+# Example recipe URL
+# url = "https://www.allrecipes.com/recipe/9870/easy-sugar-cookies"
+
 def get_recipe(url):
+
     recipe_dict = {
         "title": "",
         "total_time": 0,
         "yields": "",
         "ingredients": [],
-        "instructions": [],  # Changed to an empty list
-        "raw_html": ""        # Added to store raw HTML
+        "instructions": ""
     }
+
     try:
+        # retrieve the recipe webpage HTML
         html = urlopen(url).read().decode("utf-8")
+
+        # pass the html alongside the url to our scrape_html function
         scraper = scrape_html(html, org_url=url)
+        
+        # COMMENT THIS "WITH OPEN" ONCE YOU INTEGRATE THIS FUNCTION INTO YOUR SERVER
+
+        # Write the HTML to a file with utf-8 encoding
+        with open("recipe.txt", "w", encoding="utf-8") as f:
+            f.write(scraper.title())          # "Spinach and Feta Turkey Burgers"
+            f.write(str(scraper.total_time()))     # 35
+            f.write(scraper.yields())
+            f.writelines(scraper.ingredients())
+            f.write(scraper.instructions())
+            f.write("\nWritten to the file.")
 
         recipe_dict["title"] = scraper.title()
         recipe_dict["total_time"] = scraper.total_time()
         recipe_dict["yields"] = scraper.yields()
         recipe_dict["ingredients"] = scraper.ingredients()
-        # Ensure instructions are a list
-        instructions = scraper.instructions()
-        if isinstance(instructions, str):
-            # Split instructions into a list based on newlines
-            recipe_dict["instructions"] = [step.strip() for step in instructions.split('\n') if step.strip()]
-        elif isinstance(instructions, list):
-            recipe_dict["instructions"] = instructions
-        else:
-            # Handle any other unexpected types
-            recipe_dict["instructions"] = []
+        recipe_dict["instructions"] = scraper.instructions().split('\n')
 
-        recipe_dict["raw_html"] = html  # Store raw HTML for AI processing
+        print(recipe_dict)
+
         return recipe_dict
+
+    # use "help(scraper)" to see all the available methods
     except HTTPError as e:
         if e.code == 403:
-            raise Exception("Access forbidden to the URL")
+            print(f"HTTP Error 403: Forbidden - Access to {url} is denied.")
         else:
-            raise Exception(f"HTTP Error: {e}")
+            print(f"HTTP Error {e.code}: {e.reason}")
 
-def get_recipe_data():
-    """
-    Default fallback data with instructions as a list.
-    """
-    return {
-        "title": "Default Recipe",
-        "total_time": 30,
-        "yields": "2 servings",
-        "ingredients": ["2 cups flour", "1 cup sugar", "2 eggs"],
-        "instructions": [
-            "Mix all ingredients together.",
-            "Bake at 350F for 20 minutes."
-        ]
-    }
+# get_recipe(url)

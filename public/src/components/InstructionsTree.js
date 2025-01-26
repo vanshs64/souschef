@@ -1,50 +1,65 @@
 import React from 'react';
-import './InstructionsTree.css'; // Ensure to create appropriate styles
+import './InstructionsTree.css';
 
 const InstructionsTree = ({ instructions, currentStep, setCurrentStep }) => {
-    console.log("Instructions received:", instructions);
     if (!instructions || instructions.length === 0) {
         return <div>No instructions available.</div>;
     }
     return (
         <div className="instructions-tree-container">
-            <div className="instructions-tree">
-                {instructions.map((step) => (
+            <ul className="instructions-tree">
+                {instructions.map((step, index) => (
                     <InstructionNode 
-                        key={step.id} 
+                        key={index} 
                         step={step} 
+                        stepNumber={index + 1} 
                         currentStep={currentStep} 
-                        setCurrentStep={setCurrentStep} 
+                        setCurrentStep={setCurrentStep}
                     />
                 ))}
-            </div>
+            </ul>
         </div>
     );
 };
 
-const InstructionNode = ({ step, currentStep, setCurrentStep }) => {
-    console.log(`Rendering step: ${step.id} - ${step.instruction}`);
-    return (
-        <div className="instruction-node">
-            <div 
-                className={`instruction-content ${currentStep === step.id ? 'active' : ''}`}
-                onClick={() => setCurrentStep(step.id)}
+const InstructionNode = ({ step, stepNumber, currentStep, setCurrentStep }) => {
+    if (Array.isArray(step)) {
+        return (
+            <li className="instruction-item branch">
+                {step.map((subStep, subIndex) => (
+                    <InstructionSubNode 
+                        key={subIndex} 
+                        subStep={subStep} 
+                        parentStepNumber={stepNumber} 
+                        subIndex={subIndex + 1}
+                        currentStep={currentStep}
+                        setCurrentStep={setCurrentStep}
+                    />
+                ))}
+            </li>
+        );
+    } else {
+        return (
+            <li 
+                className={`instruction-item ${currentStep === stepNumber ? 'active' : ''}`} 
+                onClick={() => setCurrentStep(stepNumber)}
             >
-                <span className="step-number">{step.id}.</span>
-                <span className="step-text">{step.instruction}</span>
-            </div>
-            {step.children && step.children.length > 0 && (
-                <div className="children-instructions">
-                    {step.children.map(child => (
-                        <InstructionNode 
-                            key={child.id} 
-                            step={child} 
-                            currentStep={currentStep} 
-                            setCurrentStep={setCurrentStep} 
-                        />
-                    ))}
-                </div>
-            )}
+                <span className="step-number">{stepNumber}.</span> {step}
+            </li>
+        );
+    }
+};
+
+const InstructionSubNode = ({ subStep, parentStepNumber, subIndex, currentStep, setCurrentStep }) => {
+    const stepId = `${parentStepNumber}.${subIndex}`;
+    return (
+        <div className="sub-instruction">
+            <li 
+                className={`instruction-item ${currentStep === stepId ? 'active' : ''}`} 
+                onClick={() => setCurrentStep(stepId)}
+            >
+                <span className="step-number">{stepId}.</span> {subStep}
+            </li>
         </div>
     );
 };

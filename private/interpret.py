@@ -1,8 +1,8 @@
-# filepath: /c:/work/GitHub/geesetemp/private/interpret.py
-import os
 import openai
-import json
+import os
 from dotenv import load_dotenv
+import ast
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -10,141 +10,88 @@ load_dotenv()
 # Initialize OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-
-def extract_recipe_info(website_html):
-    """
-    Extracts and organizes recipe information from the provided HTML using OpenAI's GPT-4.
-
-    Args:
-        website_html (str): The HTML content of the recipe page.
-
-    Returns:
-        dict: A dictionary containing extracted and organized recipe information.
-    """
-    try:
-        basic_info = extract_basic_info(website_html)
-        if not basic_info:
-            return {}
-
-        organized_instructions = organize_instructions(basic_info.get("instructions", []))
-
-        recipe_info = {
-            "title": basic_info.get("title", ""),
-            "ingredients": basic_info.get("ingredients", []),
-            "instructions": organized_instructions,
-            "notes": basic_info.get("notes", ""),
-            "total_time": basic_info.get("total_time", 0),
-            "yields": basic_info.get("yields", "")
-        }
-
-        return recipe_info
-
-    except Exception as e:
-        print(f"Error extracting recipe info: {e}")
-        return {}
-
-
-def extract_basic_info(website_html):
-    """
-    Uses OpenAI's GPT-4 to extract basic recipe information from HTML.
-
-    Args:
-        website_html (str): The HTML content of the recipe page.
-
-    Returns:
-        dict: A dictionary containing basic extracted recipe information.
-    """
-    try:
-        prompt = (
-            "Extract the recipe title, total time, yields, ingredients, and instructions from the following HTML content. "
-            "Return the information in JSON format with the keys: title, total_time, yields, ingredients (list), instructions (list). "
-            "Ensure the instructions are split into individual steps."
-        )
-
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant that extracts recipe information."},
-                {"role": "user", "content": prompt + "\n\n" + website_html}
-            ],
-            temperature=0.3,
-        )
-
-        recipe_json = response.choices[0].message['content'].strip()
-        recipe_data = json.loads(recipe_json)
-        return recipe_data
-
-    except json.JSONDecodeError as jde:
-        print(f"JSON decode error: {jde}")
-        return {}
-    except Exception as e:
-        print(f"Error extracting basic info: {e}")
-        return {}
-
-
 def organize_instructions(instructions):
     """
-    Uses OpenAI's GPT-4 to identify parallelizable steps and organizes instructions into a tree structure.
+    Sends a list of instructions to OpenAI's API to organize them into a nested structure
+    based on tasks that can be multitasked or grouped together.
 
     Args:
-        instructions (list): A list of instruction strings.
+        api_key (str): OpenAI API key for authentication.
+        instructions (list): A list of instruction strings to organize.
 
     Returns:
-        list: A list of organized instructions with possible branching.
+        list: A nested list of organized instructions.
     """
+
+        # Prepare the messages for the ChatGPT model
+    messages = [
+        {"role": "system", "content": "You are an assistant that organizes instructions."},
+        {
+            "role": "user",
+            "content": (
+                "Given the following list of instructions, organize them into a nested structure "
+                "where steps that can be performed simultaneously or multitasked are grouped together. "
+                "Return the result as a nested list structure without any additional words. Here is the input list:\n\n"
+                f"{instructions}\n\nOrganized instructions:"
+            ),
+        },
+    ]
+
+
+    
     try:
-        # Combine instructions into a single string
-        instructions_text = "\n".join([f"{idx+1}. {step}" for idx, step in enumerate(instructions)])
-
-        prompt = (
-            "Analyze the following list of cooking instructions and identify any steps that can be parallelized or executed simultaneously. "
-            "Organize the instructions into a hierarchical JSON structure where each step has an 'id', 'instruction', and an optional 'children' list for sub-steps.\n\n"
-            f"Instructions:\n{instructions_text}\n\n"
-            "Return the structured JSON."
+        response = openai.chat.completions.create(
+            model = "gpt-4o",
+            messages = messages,
+            temperature = 0.7
         )
-
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are an assistant that organizes cooking instructions into a hierarchical structure."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.3,
-        )
-
-        instructions_json = response.choices[0].message['content'].strip()
-        instructions_data = json.loads(instructions_json)
-        return instructions_data
-
-    except json.JSONDecodeError as jde:
-        print(f"JSON decode error in organizing instructions: {jde}")
-        return []
+        # Parse the response text to extract the organized list
+        organized_instructions = response.choices[0].message.content
+        return prune(organized_instructions)
+    
     except Exception as e:
-        print(f"Error organizing instructions: {e}")
-        return []
+        print(f"An error occurred: {e}")
+        return None
 
-
-# The main function is now optional and primarily for testing purposes
-def main():
+def prune(response_text):
     """
-    Example usage of extract_recipe_info.
-    Reads 'website.txt', extracts and organizes recipe information, and writes to 'recipe_details.json'.
+    Prunes the response text by removing '```py' at the beginning and '```' at the end if present,
+    and converts the result into a list.
+
+    Args:
+        response_text (str): The response text from OpenAI.
+
+    Returns:
+        list: The pruned and converted list of instructions.
     """
-    try:
-        with open('website.txt', 'r', encoding='utf-8') as file:
-            website_html = file.read()
-    except FileNotFoundError:
-        print("The file 'website.txt' was not found.")
-        return
+    if response_text.startswith("```py"):
+        response_text = response_text[5:]  # Remove '```py\n'
+    if response_text.startswith("```python"):
+        response_text = response_text[9:]  # Remove '```py\n'
+    if response_text.endswith("```"):
+        response_text = response_text[:-3]  # Remove '```'
+    
+    return response_text
 
-    recipe_details = extract_recipe_info(website_html)
-    if recipe_details:
-        with open('recipe_details.json', 'w', encoding='utf-8') as outfile:
-            json.dump(recipe_details, outfile, indent=4)
-        print("Recipe details extracted and saved to 'recipe_details.json'.")
-    else:
-        print("Failed to extract recipe details.")
+def get_organized_instruction(instructions):
+
+    organized = ast.literal_eval(organize_instructions(instructions))
+
+    return organized
 
 
+# Example usage
 if __name__ == "__main__":
-    main()
+    api_key = "your_openai_api_key_here"
+    instructions = [
+        "Gather all ingredients. Preheat the oven to 375 degrees F (190 degrees C).",
+        "Stir flour, baking soda, and baking powder together in a small bowl.",
+        "Beat sugar and butter together in a large bowl with an electric mixer until smooth.",
+        "Beat in egg and vanilla.",
+        "Gradually blend in flour mixture.",
+        "Roll dough into walnut-sized balls and place 2 inches apart onto ungreased baking sheets.",
+        "Bake in the preheated oven until edges are golden, 8 to 10 minutes. Cool on the baking sheets briefly before removing to a wire rack to cool completely."
+    ]
+    organized = ast.literal_eval(organize_instructions(instructions))
+    print("Organized Instructions:", organized)
+    print(type(organized))

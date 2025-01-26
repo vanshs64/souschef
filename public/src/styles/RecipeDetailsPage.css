@@ -2,20 +2,27 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    padding: 20px;
+    background-color: #f0f4f8;
 }
 
 .instruction-counter {
     padding: 10px;
-    background-color: #f8f8f8;
+    background-color: #ffffff;
     text-align: center;
     font-size: 1.2em;
     border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .recipe-details-content {
     display: flex;
     flex: 1;
     overflow: hidden;
+    flex-direction: row;
+    gap: 20px;
 }
 
 .ingredients-section {
@@ -23,20 +30,28 @@
     padding: 20px;
     border-right: 1px solid #ddd;
     overflow-y: auto;
-    background-color: #fafafa;
+    background-color: #ffffff;
+    border-radius: 8px;
 }
 
 .instructions-section {
     width: 75%;
     padding: 20px;
     overflow-y: auto;
+    background-color: #ffffff;
+    border-radius: 8px;
 }
 
 .navigation-buttons {
     padding: 10px;
-    background-color: #f8f8f8;
+    background-color: #ffffff;
     text-align: center;
     border-top: 1px solid #ddd;
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    border-radius: 8px;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
 }
 
 button {
@@ -46,6 +61,7 @@ button {
     cursor: pointer;
     border: none;
     border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .finish-button {
@@ -53,9 +69,19 @@ button {
     color: white;
 }
 
+.finish-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
 .next-button {
     background-color: #007bff;
     color: white;
+}
+
+.next-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
 .secondary-button {
@@ -63,34 +89,16 @@ button {
     color: white;
 }
 
-.congratulations-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+.secondary-button:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
 }
 
-.congratulations-page h1 {
-    font-size: 3em;
+.recipe-title {
+    text-align: center;
+    color: #333;
     margin-bottom: 20px;
-}
-
-.congratulations-page p {
-    font-size: 1.5em;
-    margin-bottom: 30px;
-}
-
-.congratulations-page button {
-    padding: 10px 30px;
-    font-size: 1em;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.congratulations-page button:hover {
-    background-color: #0056b3;
+    font-size: 2em;
+    font-family: 'Inter', sans-serif;
+    word-wrap: break-word;
 }
