@@ -1,7 +1,7 @@
 # My Recipe App
 
 ## Overview
-My Recipe App is a user-friendly React application that allows users to input a recipe URL or paste recipe text directly. The app extracts important details such as ingredients, steps, durations, and provides helpful cooking techniques. Users can specify the quantity of the recipe they want and receive step-by-step instructions in a friendly manner.
+Our Recipe App is a user-friendly React application that allows users to input a recipe URL or paste recipe text directly. The app extracts important details such as ingredients, steps, durations, and provides helpful cooking techniques. Users can specify the quantity of the recipe they want and receive step-by-step instructions in a friendly manner.
 
 ## Features
 - Input a recipe URL or paste recipe text directly.
@@ -55,7 +55,7 @@ npm run build
 3. Follow the step-by-step instructions provided by the app.
 
 ## Contributing
-Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+A hackathon project created by Aizah, Vansh, Vishnu and Simon welcomes contributions! Please open an issue or submit a pull request for any enhancements or bug fixes.
 
 ## License
 This project is licensed under the MIT License.
