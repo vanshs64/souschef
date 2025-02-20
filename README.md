@@ -1,4 +1,4 @@
-# My Recipe App
+# SousChef - A Recipe App
 
 ## Overview
 Our Recipe App is a user-friendly React application that allows users to input a recipe URL or paste recipe text directly. The app extracts important details such as ingredients, steps, durations, and provides helpful cooking techniques. Users can specify the quantity of the recipe they want and receive step-by-step instructions in a friendly manner.
